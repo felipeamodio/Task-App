@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {SafeAreaView, Text, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import LottieView from 'lottie-react-native';
 
 export default function Login(){
     const [type, setType] = useState('login');
@@ -12,6 +13,15 @@ export default function Login(){
 
     return(
         <SafeAreaView style={styles.container}>
+            <View style={styles.containerAnimation}>
+                <LottieView 
+                    source={require('../../assets/tasks.json')}
+                    autoPlay={true}
+                    loop={true}
+                    style={{width: 600, height: 200}}
+                />
+            </View>
+
             <View style={styles.containerInput}>
                 <TextInput 
                     placeholder="Seu e-mail"
@@ -21,7 +31,7 @@ export default function Login(){
                 />
 
                 <TextInput 
-                    placeholder="*********"
+                    placeholder="*********" 
                     style={styles.input}
                     value={password}
                     onChangeText={(text) => setPassword(text)}
@@ -51,6 +61,10 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         backgroundColor: '#F2F6FC',
         paddingHorizontal: 10
+    },
+    containerAnimation: {
+        marginTop: 40,
+        alignItems: 'center'
     },
     handleLogin: {
         alignItems: 'center',
