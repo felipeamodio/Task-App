@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {SafeAreaView, Text, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import LottieView from 'lottie-react-native';
 
+import firebase from '../../services/firebaseConnection';
+
 export default function Login(){
     const [type, setType] = useState('login');
     const [email, setEmail] = useState('');
