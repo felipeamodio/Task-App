@@ -11,9 +11,8 @@ let firebaseConfig = {
   appId: "1:1034199439490:web:3c2cebbcb65c4163c7bc9b"
 };
 
-  //se não tiver nenhuma conexão aberta, irei iniciar uma conexão
-  if(!firebase.apps.length){
-    firebase.initializeApp(firebaseConfig)
-  }
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default firebase;
