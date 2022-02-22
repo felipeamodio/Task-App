@@ -5,7 +5,7 @@ import LottieView from 'lottie-react-native';
 import firebase from '../../services/firebaseConnection';
 require('firebase/auth')
 
-export default function Login(){
+export default function Login({changeStatus}){
     const [type, setType] = useState('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -15,7 +15,7 @@ export default function Login(){
             //Fazendo o login
             const user = firebase.auth().signInWithEmailAndPassword(email, password)
             .then((user) => {
-                console.log(user.user)
+                changeStatus(user.user.uid) 
             })
             .catch((error) => {
                 console.log(error);
@@ -26,7 +26,7 @@ export default function Login(){
             //Cadastro do usuário
             const user = firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((user) => {
-                console.log(user.user)
+                changeStatus(user.user.uid)
             })
             .catch((error) => {
                 console.log(error)
