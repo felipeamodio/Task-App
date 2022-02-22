@@ -3,6 +3,7 @@ import {SafeAreaView, Text, StyleSheet, TextInput, TouchableOpacity, View} from 
 import LottieView from 'lottie-react-native';
 
 import firebase from '../../services/firebaseConnection';
+require('firebase/auth')
 
 export default function Login(){
     const [type, setType] = useState('login');
@@ -11,8 +12,8 @@ export default function Login(){
 
     function handleLogin(){
         if(type === 'login'){
-            //Fazemos o login
-            const user = firebase.auth.signInWithEmailAndPassword(email, password)
+            //Fazendo o login
+            const user = firebase.auth().signInWithEmailAndPassword(email, password)
             .then((user) => {
                 console.log(user.user)
             })
@@ -23,7 +24,7 @@ export default function Login(){
             })
         }else{
             //Cadastro do usuário
-            const user = firebase.auth.createUserWithEmailAndPassword(email, password)
+            const user = firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((user) => {
                 console.log(user.user)
             })
