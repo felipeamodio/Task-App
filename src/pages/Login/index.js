@@ -10,7 +10,29 @@ export default function Login(){
     const [password, setPassword] = useState('');
 
     function handleLogin(){
-        alert('teste')
+        if(type === 'login'){
+            //Fazemos o login
+            const user = firebase.auth.signInWithEmailAndPassword(email, password)
+            .then((user) => {
+                console.log(user.user)
+            })
+            .catch((error) => {
+                console.log(error);
+                alert('Ops, deu algum erro')
+                return;
+            })
+        }else{
+            //Cadastro do usuário
+            const user = firebase.auth.createUserWithEmailAndPassword(email, password)
+            .then((user) => {
+                console.log(user.user)
+            })
+            .catch((error) => {
+                console.log(error)
+                alert('Ops, deu algum erro!')
+                return;
+            })
+        }
     }
 
     return(
