@@ -9,6 +9,7 @@ export default function App() {
   const [newTask, setNewTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
+  //mostrando a lista quando logas e manter
   useEffect(() => {
     function getUser(){
       if(!user){
@@ -30,7 +31,11 @@ export default function App() {
   }, [user])
 
   function handleDelete(key){
-    console.log(key)
+    firebase.database().ref('tarefas').child(user).child(key).remove()
+    .then(() => {
+      const findTasks = tasks.filter(item => item.key !== key)
+      setTasks(findTasks)
+    })
   }
 
   function handleEdit(data){
