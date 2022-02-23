@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, FlatList, Keyboard} from 'react-native';
 import Login from './src/pages/Login';
 import TaskList from './src/components/TaskList';
@@ -8,6 +8,26 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [newTask, setNewTask] = useState('');
   const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    function getUser(){
+      if(!user){
+        return;
+      }
+      firebase.database().ref('tarefas').child(user).once('value', (snapshot) => {
+        setTasks([]);
+
+        snapshot?.forEach((childItem) => {
+          let data = {
+            key: childItem.key,
+            nome: childItem.val().nome
+          }
+          setTasks(oldTasks => [...oldTasks,data])
+        })
+      })
+    }
+    getUser();
+  }, [user])
 
   function handleDelete(key){
     console.log(key)
