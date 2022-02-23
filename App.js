@@ -1,21 +1,13 @@
 import React, {useState} from 'react';
-import {Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, FlatList} from 'react-native';
+import {Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, FlatList, Keyboard} from 'react-native';
 import Login from './src/pages/Login';
 import TaskList from './src/components/TaskList';
-
-let tasks = [
-  {key: '1', nome: 'Ir no mercado'},
-  {key: '2', nome: 'Ir no mecânico'},
-  {key: '3', nome: 'Estudar para prova'},
-  {key: '4', nome: 'Revisar trabalho'},
-  {key: '5', nome: 'Ir para o parque'},
-  {key: '6', nome: 'Pagar academia'},
-  {key: '7', nome: 'Comprar roupa'},
-]
+import firebase from './src/services/firebaseConnection';
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [newTask, setNewTask] = useState('');
+  const [tasks, setTasks] = useState([]);
 
   function handleDelete(key){
     console.log(key)
@@ -29,6 +21,30 @@ export default function App() {
     return <Login changeStatus={(user) => setUser(user)} />
   }
 
+  function handleAdd(){
+    if(newTask === ''){
+      return;
+    }
+
+    //passando o child pra saber se o usuer está logado passando o id
+    let tarefas = firebase.database().ref('tarefas').child(user)
+    let chave = tarefas.push().key
+
+    tarefas.child(chave).set({
+      nome: newTask
+    })
+    .then(() => {
+      const data = {
+        key: chave,
+        nome: newTask
+      }
+      setTasks(oldTasks => [...oldTasks, data])
+    })
+
+    Keyboard.dismiss();
+    setNewTask('')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
         <Text style={styles.title}>AppTarefas</Text>
@@ -39,7 +55,7 @@ export default function App() {
           value={newTask}
           onChangeText={(text) => setNewTask(text)}
         />
-        <TouchableOpacity style={styles.btnAdd}>
+        <TouchableOpacity style={styles.btnAdd} onPress={handleAdd}>
           <Text style={styles.txtPlus}>+</Text>
         </TouchableOpacity>
       </View>
