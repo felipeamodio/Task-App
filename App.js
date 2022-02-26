@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, FlatList, Keyboard} from 'react-native';
 import Login from './src/pages/Login';
 import TaskList from './src/components/TaskList';
@@ -8,6 +8,8 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [newTask, setNewTask] = useState('');
   const [tasks, setTasks] = useState([]);
+  const inputRef = useRef(null);
+  const [key, setKey] = useState('');
 
   //mostrando a lista quando logas e manter
   useEffect(() => {
@@ -39,7 +41,9 @@ export default function App() {
   }
 
   function handleEdit(data){
-    console.log('Item clicado', data)
+    setKey(data.key)
+    setNewTask(data.nome)
+    inputRef.current.focus();
   }
 
   if(!user){
@@ -50,6 +54,24 @@ export default function App() {
     if(newTask === ''){
       return;
     }
+
+  // usuário quer editar uma tarefa
+  if(key !== ''){
+    firebase.database().ref('tarefas').child(user).child(key).update({
+      nome: newTask
+    })
+    .then(() => {
+      const taskIndex = tasks.findIndex(item => item.key === key)
+      const taskClone = tasks;
+      taskClone[taskIndex].nome = newTask
+      
+      setTasks([...taskClone])
+    })
+    Keyboard.dismiss();
+    setNewTask('');
+    setKey('');
+    return;
+  }
 
     //passando o child pra saber se o usuer está logado passando o id
     let tarefas = firebase.database().ref('tarefas').child(user)
@@ -79,6 +101,7 @@ export default function App() {
           placeholder="Qual sua próxima tarefa?"
           value={newTask}
           onChangeText={(text) => setNewTask(text)}
+          ref={inputRef}
         />
         <TouchableOpacity style={styles.btnAdd} onPress={handleAdd}>
           <Text style={styles.txtPlus}>+</Text>
